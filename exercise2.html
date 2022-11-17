@@ -1,0 +1,98 @@
+<script>
+
+    json = [
+        {
+            country: "US",
+            languages: ["en"]
+        },
+        {
+            country: "BE",
+            languages: ["nl", "fr", "de"]
+        },
+        {
+            country: "NL",
+            languages: ["nl", "fy"]
+        },
+        {
+            country: "DE",
+            languages: ["de"]
+        },
+        {
+            country: "ES",
+            languages: ["es"]
+        }
+    ]
+
+    function totalCountries(data) {
+        const countCountry = [];
+        data.forEach(item => {
+            if (item.country) countCountry.push(item.country)
+        })
+
+        return countCountry.length;
+    }
+
+    function countryMostLanguageDe(data) {
+
+        const countLanguages = []
+        data.forEach(country => {
+            if (country.languages.includes('de'))
+                countLanguages.push({"country": country.country, "total": country.languages.length})
+                
+        })
+
+        return countLanguages.sort((a, b) => b.total-a.total)[0].country;
+    }
+
+    function officialLanguages(data) {
+
+        const countLanguages = new Map();
+        data.forEach(country => {
+            country.languages.forEach(lang => {
+                if (!countLanguages.has(lang)) {
+                    countLanguages.set(lang, 1);
+                }
+                else countLanguages.set(lang, countLanguages.get(lang) + 1);
+            })
+
+        })
+        return JSON.stringify(Object.fromEntries(countLanguages));
+    }
+
+    function countryMostLanguage(data) {
+        const countLanguages = []
+        data.forEach(country => {
+            
+            countLanguages.push({"country": country.country, "total": country.languages.length})
+                
+        })
+
+        return countLanguages.sort((a, b) => b.total-a.total)[0].country;
+        }
+  
+        function mostCommonLanguage() {
+            const totalLanguages = JSON.parse(officialLanguages(json))
+            let sortable = [];
+            for (var language in totalLanguages) {
+                sortable.push([language, totalLanguages[language]]);
+            }
+
+            sortable.sort(function(a, b) {
+                return  b[1] - a[1];
+            });
+
+        return JSON.stringify(Object.fromEntries(sortable))
+        }
+
+
+    document.write(`<ul>
+        <li>returns the number of countries in the world: ${totalCountries(json)} </li>
+        <li>finds the country with the most official languages, where they officially speak German (de): ${countryMostLanguageDe(json)} </li>
+        <li>that counts all the official languages spoken in the listed countries.: ${officialLanguages(json)} </li>
+        <li>to find the country with the highest number of official languages: ${countryMostLanguage(json)} </li>
+        <li>to find the most common official language(s), of all countries: ${mostCommonLanguage()} </li>
+        </ul>`)
+    
+    
+</script>
+    
